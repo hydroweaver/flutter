@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-void main(){
+/*void main(){
   runApp(MyScaffold());
-}
+}*/
 
 /* for explanation - 
 
