@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 // STATEFUL WIDGET - WITH GESTURE DETECTOR
 
-void main(){
+/*void main(){
   runApp(MaterialApp(
     title: 'Increment',
     home: Counter(),
   ));
 }
 
-/*class Counter extends StatefulWidget{  
+class Counter extends StatefulWidget{  
   @override
   _CounterState createState() => _CounterState();
 
@@ -30,17 +30,10 @@ class _CounterState extends State<Counter>{
   Widget build(BuildContext context){
     return GestureDetector(
       onTap: _increment,
-      child: Column(
-        children: <Widget>[
-          Text(_ctr.toString()),
-          Expanded(
-            child: FloatingActionButton(
+      child: FloatingActionButton(
               onPressed: _increment,
               child: Icon(Icons.add),
             ),
-          )
-        ],
-      ),
     );
   }
 }*/
@@ -48,7 +41,7 @@ class _CounterState extends State<Counter>{
 
 //STATEFUL WIDGET - REGULAR INCREMENT BUTTON
 
-class Counter extends StatefulWidget{  
+/*class Counter extends StatefulWidget{  
   @override
   _CounterState createState() => _CounterState();
 
@@ -119,3 +112,5 @@ class GestureApp extends StatelessWidget{
     );
   }
 }*/
+
+*/

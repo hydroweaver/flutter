@@ -54,4 +54,7 @@ it means one child is taking 1/(1+2) space, while other is taking 2/(1+2)!
 
 7. In a main widget, any type, you can use the extend function to add more children!
 
+8. Stateless widgets can be called inside stateful widgets, to redraw the UI and make the implementation more cleaner. Like children
+of row, cols etc.
+
 */
