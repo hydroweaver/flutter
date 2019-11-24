@@ -1,99 +1,50 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as prefix0;
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main(){
   runApp(MaterialApp(
-      title: 'Test App for Crap',
-      home: ListApp(),
-    )
-  );
+    title: "Add User Text to List",
+    home: UserText(),
+  ));
 }
 
-class TextWidget extends StatelessWidget{
-  
-  final String text;
-  final bool strike;
+class UserText extends StatelessWidget{
 
-  TextWidget({this.text, this.strike});
+  List todoList = [];
 
-  Widget _TextStyle(){
-    if(!strike){
-      return Text(
-        text,
-        style: TextStyle(
-          color: Colors.green[500],
-          decoration: TextDecoration.lineThrough,
-          fontSize: 25,
-        ),
-      );
-    }
-    else{
-      return Text(
-        text,
-        style: TextStyle(
-          color: Colors.green[500],
-          fontSize: 25,
-        ),
-      );
-    }
+  void addTodo(){
+    todoList.add("Length of the list is ${todoList.length}");
   }
+
 
   @override
-  Widget build(BuildContext context){
-    return new Container(child: _TextStyle());
-  }
-}
-
-class ListApp extends StatefulWidget{
-  @override
-  _ListAppState createState() => _ListAppState();
-}
-
-class _ListAppState extends State<ListApp>{
-
-  int ctr = 0;
-  bool strike = false;
-
-  void _Counter(){
-    setState(() {
-      ctr += 1;
-    });
-  }
-
-  bool _StrikeThroughAll(){
-    if(!strike){
-      strike = false;
-      return strike;
-    }
-    else{
-      strike = true;
-      return strike;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Statelful Calling Stateless Widgets"),
+        title: Text("Write Something"),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          TextWidget(text: 'Value of this Widget is $ctr', strike: strike,),
-          TextWidget(text: 'Value of this Widget is ${ctr+1}', strike: strike,),
-          RaisedButton(
-            onPressed: _Counter,
-            child: Text("Increment"),
-            textColor: Colors.green[500],
-            elevation: 10,
+          TextField(
+            onTap: (){
+              Fluttertoast.showToast(
+                msg: "you're typing something!"
+              );
+            },
           ),
           RaisedButton(
-            onPressed: _StrikeThroughAll,
-            child: Text("Strike Toggle"),
-            textColor: Colors.green[500],
+            onPressed: addTodo,
+            child: Text("Add Todo"),
+            textColor: Colors.blue[300],
             elevation: 10,
           ),
+          ListView(
+            children: <Widget>[],
+          )
         ],
       ),
     );
