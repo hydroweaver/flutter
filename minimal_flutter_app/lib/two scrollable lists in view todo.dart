@@ -24,6 +24,8 @@ class _MyCustomForm extends StatefulWidget{
   _MyCustomFormState createState() => _MyCustomFormState();
 }
 
+//LISTVIEW CHILDREN ARE STATELESS WIDGETS BEING CALLED FROM STATEFUL WIDGET - ALL OF THEM WOULD HAVE WORKED! I DIDNT USE THE 
+//SETSTATE VARIABLE ! :|
 class _MyCustomFormState extends State<_MyCustomForm>{
   final myController = TextEditingController();
 
@@ -67,23 +69,38 @@ class _MyCustomFormState extends State<_MyCustomForm>{
             elevation: 10,
           ),
           Expanded(
+            child: ListView.separated(
+              separatorBuilder: (context, index){
+                return Container(
+                  padding: const EdgeInsets.all(2.0),
+                  color: Colors.lime[100],
+                  margin: EdgeInsets.all(2.0),
+                );
+              },
+            shrinkWrap: true,
+            itemCount: todoList.length,
+            itemBuilder: (context, index){
+              final todo = todoList[index];
+              return ListTile(
+                title: ListViewWidget(listText: todo),
+              );
+            }
+          ),
+          ),
+          Expanded(
             child: ListView.builder(
             itemCount: todoList.length,
             itemBuilder: (context, index){
               final todo = todoList[index];
-              return Row(
-                children: <Widget>[
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        todo,
-                        style: TextStyle(color: Colors.green[500], fontSize: 22.0),
-                      ),
-                    ),
-                    color: Colors.orange[100],
+              return Card(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(
+                    todo,
+                    style: TextStyle(color: Colors.green[500], fontSize: 22.0),
+                    
                   ),
-                ],
+                ),
               );
             }
           ),
