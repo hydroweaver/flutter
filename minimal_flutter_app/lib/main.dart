@@ -8,16 +8,7 @@ void main(){
   ));
 }
 
-class ListViewWidget extends StatelessWidget{
-  
-  ListViewWidget({this.listText});
-  final String listText;
-  
-  @override
-  Widget build(BuildContext context){
-    return Text(listText);
-  }
-}
+//put gesture builder in list item, every list item would be gesture builder and todo note
 
 class _MyCustomForm extends StatefulWidget{
   @override
@@ -47,49 +38,12 @@ class _MyCustomFormState extends State<_MyCustomForm>{
 
   @override
   Widget build(BuildContext context){
-        return Scaffold(
-      appBar: AppBar(
-        title: Text("Write Something"),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TextField(
-            controller: myController,
-            enabled: true,
-            autofocus: true,
-          ),
-          RaisedButton(
-            onPressed: addTodo,
-            child: Text("Add Todo"),
-            textColor: Colors.blue[300],
-            elevation: 10,
-          ),
-          Expanded(
-            child: ListView.builder(
-            itemCount: todoList.length,
-            itemBuilder: (context, index){
-              final todo = todoList[index];
-              return Row(
-                children: <Widget>[
-                  Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        todo,
-                        style: TextStyle(color: Colors.green[500], fontSize: 22.0),
-                      ),
-                    ),
-                    color: Colors.orange[100],
-                  ),
-                ],
-              );
-            }
-          ),
-          )
-        ],
-      ),
+    return GestureDetector(
+      onTap: (){
+        Fluttertoast.showToast(
+          msg: "Card was pressed",
+        );
+      },
     );
-  }
+}
 }
