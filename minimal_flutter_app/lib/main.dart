@@ -3,47 +3,99 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 void main(){
   runApp(MaterialApp(
-    title: "Add User Text to List",
-    home: _MyCustomForm(),
+    title: "Simple ToDo",
+    home: TodoListApp(),
   ));
 }
 
-//put gesture builder in list item, every list item would be gesture builder and todo note
-
-class _MyCustomForm extends StatefulWidget{
-  @override
-  _MyCustomFormState createState() => _MyCustomFormState();
+class ListTodo{
+  String todoText;
+  bool todoToggle;
+  ListTodo(this.todoText, this.todoToggle);
 }
 
-class _MyCustomFormState extends State<_MyCustomForm>{
-  final myController = TextEditingController();
+/*class todoWidget extends StatelessWidget{
 
-  final List todoList = [];
+}*/
 
-  void addTodo(){
-    setState(() {
-      todoList.add(myController.text);
-      Fluttertoast.showToast(
-      msg: "${todoList[todoList.length-1]}"
-      );
-      myController.clear();
-    });
-  }
+class TodoListApp extends StatefulWidget{
+  @override
+  _TodoListAppState createState() => _TodoListAppState();
+}
+
+class _TodoListAppState extends State<TodoListApp>{
+  
+  List<ListTodo> todoList = new List<ListTodo>();
+  //List<ListTodo> todoList = [];
+  //final todoList = [];
+  final myTextController = TextEditingController();
 
   @override
   void dispose(){
-    myController.dispose();
+    myTextController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context){
-    return GestureDetector(
-      onTap: (){
-        Fluttertoast.showToast(
-          msg: "Card was pressed",
-        );
-      },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Add Todos"),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          TextField(
+            controller: myTextController,
+          ),
+          RaisedButton(
+            onPressed: (){setState(() {
+              todoList.add(new ListTodo(myTextController.text, false));
+              myTextController.clear();
+            });
+            },
+            child: Text(
+              "Add Todo",
+              style: TextStyle(color: Colors.blue[500], fontSize: 16.0,),
+              ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: todoList.length,
+              itemBuilder: (context, index){
+                return GestureDetector(
+                  child: Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        todoList[index].todoText,
+                        style: TextStyle(fontSize: 22.0, color: Colors.blue[500]),
+                        ),
+                    ),
+                  ),
+                  onTap: (){
+                    setState(() {
+                      if(todoList[index].todoToggle == false){
+                        todoList[index].todoToggle = true;
+                        Fluttertoast.showToast(
+                          msg: "Toggle for ${todoList[index].todoText} set to ${todoList[index].todoToggle}"
+                        );
+                      }
+                      else{
+                        todoList[index].todoToggle = false;
+                        Fluttertoast.showToast(
+                          msg: "Toggle for ${todoList[index].todoText} set to ${todoList[index].todoToggle}"
+                        );
+                      }
+                    });
+                  },
+                );
+              },
+            ),
+          )
+        ],
+      )
     );
-}
+  }
 }
