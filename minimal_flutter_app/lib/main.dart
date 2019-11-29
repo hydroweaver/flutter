@@ -36,12 +36,6 @@ class _TodoListAppState extends State<TodoListApp>{
     super.dispose();
   }
 
-  //using this instead of anon function inside gesture detector
-  @override
-  void changeToggle(){
-
-  }
-
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -57,7 +51,7 @@ class _TodoListAppState extends State<TodoListApp>{
           ),
           RaisedButton(
             onPressed: (){setState(() {
-              todoList.add(new ListTodo(myTextController.text, false));
+              todoList.add(new ListTodo(myTextController.text, true));
               myTextController.clear();
             });
             },
@@ -74,10 +68,13 @@ class _TodoListAppState extends State<TodoListApp>{
                   child: Card(
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: Text(
+                      child: todoList[index].todoToggle ? Text(
                         todoList[index].todoText,
-                        style: TextStyle(fontSize: 22.0, color: Colors.blue[500])
-                        ),
+                        style: TextStyle(decoration: TextDecoration.none, color: Colors.blue[500], fontSize: 22.0),
+                      ) : Text(
+                        todoList[index].todoText,
+                        style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.red[100], fontSize: 22.0),
+                      ),
                     ),
                   ),
                   onTap: (){
@@ -94,6 +91,11 @@ class _TodoListAppState extends State<TodoListApp>{
                           msg: "Toggle for ${todoList[index].todoText} set to ${todoList[index].todoToggle}"
                         );
                       }
+                    });
+                  },
+                  onLongPress: (){
+                    setState(() {
+                      todoList.remove(index);
                     });
                   },
                 );
