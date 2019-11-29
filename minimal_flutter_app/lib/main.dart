@@ -36,6 +36,12 @@ class _TodoListAppState extends State<TodoListApp>{
     super.dispose();
   }
 
+  //using this instead of anon function inside gesture detector
+  @override
+  void changeToggle(){
+
+  }
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -70,7 +76,7 @@ class _TodoListAppState extends State<TodoListApp>{
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
                         todoList[index].todoText,
-                        style: TextStyle(fontSize: 22.0, color: Colors.blue[500]),
+                        style: TextStyle(fontSize: 22.0, color: Colors.blue[500])
                         ),
                     ),
                   ),
