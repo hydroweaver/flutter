@@ -95,7 +95,10 @@ class _TodoListAppState extends State<TodoListApp>{
                   },
                   onLongPress: (){
                     setState(() {
-                      todoList.remove(index);
+                      Fluttertoast.showToast(
+                        msg: "Todo ${todoList[index].todoText} Deleted"
+                      );
+                      todoList.removeAt(index);
                     });
                   },
                 );
