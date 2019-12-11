@@ -11,6 +11,8 @@
         android:label="googlemaps_embed"
         android:icon="@mipmap/ic_launcher">
 
+        <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value=""/>
 
