@@ -22,6 +22,10 @@ void main(){
   ));
 }
 
+enum PermissionName{
+  Location,
+}
+
 class Maps{
   String maptype;
   IconData icon;
@@ -42,8 +46,6 @@ class MapsWidgetState extends State<MapsWidget>{
   
   var location_persmission = Permission.getPermissionsStatus([PermissionName.Location]);
   var location_permission_name = Permission.requestPermissions([PermissionName.Location]);
-
-  
 
   Maps _maps = mapList[0];
   bool getUserLocationPermission = false;
