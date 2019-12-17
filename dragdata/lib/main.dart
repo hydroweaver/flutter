@@ -8,21 +8,45 @@ void main(){
   ));
 }
 
-class App extends StatelessWidget{
+class App extends StatefulWidget{
+  @override
+  AppState createState() => AppState();
+}
+
+class AppState extends State<App>{
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: Text("Drag it"),
       ),
-      body: Column(
-        children: <Widget>[
-          Draggable(
-            child: Text("Drag this text"),
-            feedback: Text("pipipipip"),
+      body: Draggable(
+        child: Card(
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.drag_handle),
+              Text("Items1"),
+              Checkbox(
+                onChanged: null,
+                value: false,
+              )
+            ],
           ),
-        ],
-      )
+        ),
+        feedback: Card(
+          child: Row(
+            children: <Widget>[
+              Icon(Icons.drag_handle),
+              Text("Item1"),
+              Checkbox(
+                onChanged: null,
+                value: false,
+              )
+            ],
+          ),
+        ),
+        childWhenDragging: Text("I'm getting dragged"),
+      ),
     );
   }
 }
