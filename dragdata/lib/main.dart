@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 void main(){
@@ -8,45 +9,50 @@ void main(){
   ));
 }
 
-class App extends StatefulWidget{
+class CustomWidget extends StatelessWidget{
+  String CustomWidgetString;
+
+  CustomWidget(this.CustomWidgetString);
+
+  Widget _widget(){
+    return Card(
+      child: Text(CustomWidgetString, style: TextStyle(fontSize: 22.0),),
+      margin: EdgeInsets.all(10.0),
+    );
+  }
+
   @override
-  AppState createState() => AppState();
+  Widget build(BuildContext context) {
+    return _widget();
+  }
 }
 
-class AppState extends State<App>{
+class App extends StatelessWidget{
+
+  List<String> k = ["karan", "Kunal", "James"];
+
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: Text("Drag it"),
       ),
-      body: Draggable(
-        child: Card(
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.drag_handle),
-              Text("Items1"),
-              Checkbox(
-                onChanged: null,
-                value: false,
-              )
-            ],
+      body: ListView(
+        children: <Widget>[
+          Draggable(
+            child: CustomWidget(k[0]),
+            feedback: CustomWidget(k[0]),
+            childWhenDragging: Card(),
           ),
-        ),
-        feedback: Card(
-          child: Row(
-            children: <Widget>[
-              Icon(Icons.drag_handle),
-              Text("Item1"),
-              Checkbox(
-                onChanged: null,
-                value: false,
-              )
-            ],
+          Draggable(
+            child: CustomWidget(k[1]),
+            feedback: CustomWidget(k[1]),
+            childWhenDragging: Card(),
           ),
-        ),
-        childWhenDragging: Text("I'm getting dragged"),
-      ),
+        ],
+      )
     );
   }
 }
+
+//IN A LISTBUILDER, ONLY ONE THING WOULD HAVE ON START ON END AS +1 AND -1...
