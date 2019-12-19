@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main(){
   runApp(MaterialApp(
@@ -10,13 +10,13 @@ void main(){
 }
 
 class CustomWidget extends StatelessWidget{
-  String CustomWidgetString;
+  final String CustomWidgetString;
 
   CustomWidget(this.CustomWidgetString);
 
   Widget _widget(){
     return Card(
-      child: Text(CustomWidgetString, style: TextStyle(fontSize: 22.0),),
+      child: Text(CustomWidgetString, style: TextStyle(fontSize: 22.0),textAlign: TextAlign.center,),
       margin: EdgeInsets.all(10.0),
     );
   }
@@ -29,7 +29,7 @@ class CustomWidget extends StatelessWidget{
 
 class App extends StatelessWidget{
 
-  List<String> k = ["karan", "Kunal", "James"];
+  final List<String> k = ["karan", "Kunal", "James"];
 
   @override
   Widget build(BuildContext context){
@@ -37,22 +37,30 @@ class App extends StatelessWidget{
       appBar: AppBar(
         title: Text("Drag it"),
       ),
-      body: ListView(
-        children: <Widget>[
-          Draggable(
-            child: CustomWidget(k[0]),
-            feedback: CustomWidget(k[0]),
-            childWhenDragging: Card(),
-          ),
-          Draggable(
-            child: CustomWidget(k[1]),
-            feedback: CustomWidget(k[1]),
-            childWhenDragging: Card(),
-          ),
-        ],
+      body: ListView.builder(
+        itemCount: k.length,
+        itemBuilder: (context, itemCount){
+          return Draggable(
+            key: Key("$itemCount"),
+            maxSimultaneousDrags: 1,
+            dragAnchor: DragAnchor.pointer,
+            child: CustomWidget(k[itemCount].toString()),
+            feedback: CustomWidget(k[itemCount].toString()),
+            childWhenDragging: Card(
+              child: Text("", style: TextStyle(fontSize: 22.0),),
+              margin: EdgeInsets.all(10.0),
+            ),
+            onDragStarted: (){
+              Fluttertoast.showToast(
+                msg: "Moved something"
+              );
+            },
+          );
+        },
       )
     );
   }
 }
 
 //IN A LISTBUILDER, ONLY ONE THING WOULD HAVE ON START ON END AS +1 AND -1...
+// ONLY CREATE ONE CARD TO DRAG FROM TO
