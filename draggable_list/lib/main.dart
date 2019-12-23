@@ -16,28 +16,22 @@ class App extends StatefulWidget{
   }
 }
 
-class CustomWidget extends StatelessWidget{
-
-  final String CustomWidgetString;
-  final Key WidgetKey;
-  
-  CustomWidget({this.CustomWidgetString, this.WidgetKey}) : super(key : WidgetKey);
-  //CustomWidget({this.CustomWidgetString, this.WidgetKey});
-
-  Widget _widget(){
-    return Text(
-      CustomWidgetString,
-      key: WidgetKey,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context){
-    return _widget();
-  }
+class CustomWidget{
+  String CustomWidgetString;
+  bool checked;
+  CustomWidget({this.CustomWidgetString, this.checked});
 }
 
 class AppState extends State<App>{
+
+  //List<String> WidgetList = ["Task", "Todo", "Task Todo"];
+  //bool checkBoxValue = false;
+
+  List<CustomWidget> WidgetList = [
+    CustomWidget(CustomWidgetString: "Zonu", checked: false),
+    CustomWidget(CustomWidgetString: "Sree", checked: true),
+    CustomWidget(CustomWidgetString: "Kunal", checked: false),
+  ];
 
   @override
   Widget build(BuildContext context){
@@ -45,16 +39,48 @@ class AppState extends State<App>{
       appBar: AppBar(
         title: Text("Reorderable List"),
       ),
-      body: ReorderableListView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          CustomWidget(
-            CustomWidgetString: "Custom Widget",
-            WidgetKey: ValueKey("value"),
+          TextField(),
+          Expanded(
+            child: ReorderableListView(
+              scrollDirection: Axis.vertical,
+            children: <Widget>[
+              for(final widget in WidgetList)
+                ListTile(
+                  key: Key("$widget"),
+                  leading: Icon(Icons.menu),
+                  title: Text(widget.CustomWidgetString),
+                  trailing: Checkbox(
+                    value: widget.checked,
+                    onChanged: (val){
+                      setState(() {
+                        if(!val){
+                          widget.checked = false;
+                        }
+                        else{
+                          widget.checked = true;
+                        }
+                      });
+                    },
+                  ),
+                )
+              ],
+            onReorder: (oldIndex, newIndex){
+              setState(() {
+                if(oldIndex < newIndex){
+                newIndex -= 1;
+                }
+                var replaceWidget = WidgetList.removeAt(oldIndex);
+                WidgetList.insert(newIndex, replaceWidget);
+                });
+                },
+            ),
           )
-        ],
-        onReorder: (a, b){
-        },
-      ),
-    );
-  }
+          ],
+        )
+      );
+    }
 }
