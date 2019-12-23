@@ -1,4 +1,4 @@
-//https://stackoverflow.com/questions/58209066/flutter-listview-of-custom-widget-including-listview-gives-errors//
+/*https://stackoverflow.com/questions/58209066/flutter-listview-of-custom-widget-including-listview-gives-errors//
 
 import 'package:flutter/material.dart';
 
@@ -18,16 +18,15 @@ class App extends StatefulWidget{
 
 class CustomWidget extends StatelessWidget{
 
-  final String CustomWidgetString;
-  final Key WidgetKey;
+  String CustomWidgetString;
+  String WidgetKey;
   
-  CustomWidget({this.CustomWidgetString, this.WidgetKey}) : super(key : WidgetKey);
-  //CustomWidget({this.CustomWidgetString, this.WidgetKey});
+  CustomWidget({this.CustomWidgetString, this.WidgetKey});
 
   Widget _widget(){
     return Text(
       CustomWidgetString,
-      key: WidgetKey,
+      key: Key(WidgetKey),
     );
   }
 
@@ -46,10 +45,11 @@ class AppState extends State<App>{
         title: Text("Reorderable List"),
       ),
       body: ReorderableListView(
+        scrollDirection: Axis.vertical,
         children: <Widget>[
           CustomWidget(
             CustomWidgetString: "Custom Widget",
-            WidgetKey: ValueKey("value"),
+            WidgetKey: "value",
           )
         ],
         onReorder: (a, b){
@@ -58,3 +58,5 @@ class AppState extends State<App>{
     );
   }
 }
+
+*/
