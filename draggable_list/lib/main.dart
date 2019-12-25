@@ -1,5 +1,3 @@
-//https://stackoverflow.com/questions/58209066/flutter-listview-of-custom-widget-including-listview-gives-errors//
-
 import 'package:flutter/material.dart';
 
 void main(){
@@ -9,6 +7,25 @@ void main(){
   ));
 }
 
+List<String> items = ["Sree", "Lavu", "Karan", "Kunal"];
+
+class _WidgetList{
+  final String value;
+  bool checkState;
+  _WidgetList(this.value, this.checkState);
+}
+
+List<_WidgetList> WidgetListfromStrings = items.map<_WidgetList>((String value){
+  return _WidgetList(value, false);
+}).toList();
+
+List<Widget> s = WidgetListfromStrings.map<Widget>(( _WidgetList value){
+  return ListTile(
+    key: Key("${value.value}"),
+    title: Text(value.value),
+  );
+}).toList();
+
 class App extends StatefulWidget{
   @override
   AppState createState(){
@@ -16,71 +33,48 @@ class App extends StatefulWidget{
   }
 }
 
-class CustomWidget{
-  String CustomWidgetString;
-  bool checked;
-  CustomWidget({this.CustomWidgetString, this.checked});
-}
-
 class AppState extends State<App>{
 
-  //List<String> WidgetList = ["Task", "Todo", "Task Todo"];
-  //bool checkBoxValue = false;
 
-  List<CustomWidget> WidgetList = [
-    CustomWidget(CustomWidgetString: "Zonu", checked: false),
-    CustomWidget(CustomWidgetString: "Sree", checked: true),
-    CustomWidget(CustomWidgetString: "Kunal", checked: false),
-  ];
+  void _onreoder(oldIndex, newIndex){
+    setState(() {
+      if(oldIndex < newIndex){
+        newIndex -= 1;
+      }
+      final replaceWidget = WidgetListfromStrings.removeAt(oldIndex);
+      WidgetListfromStrings.insert(newIndex, replaceWidget);
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text("Reorderable List"),
+        title: Text("Re Orderable List"),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: ReorderableListView(
         children: <Widget>[
-          TextField(),
-          Expanded(
-            child: ReorderableListView(
-              scrollDirection: Axis.vertical,
-            children: <Widget>[
-              for(final widget in WidgetList)
-                ListTile(
-                  key: Key("$widget"),
-                  leading: Icon(Icons.menu),
-                  title: Text(widget.CustomWidgetString),
-                  trailing: Checkbox(
-                    value: widget.checked,
-                    onChanged: (val){
-                      setState(() {
-                        if(!val){
-                          widget.checked = false;
-                        }
-                        else{
-                          widget.checked = true;
-                        }
-                      });
-                    },
-                  ),
-                )
-              ],
-            onReorder: (oldIndex, newIndex){
-              setState(() {
-                if(oldIndex < newIndex){
-                newIndex -= 1;
-                }
-                var replaceWidget = WidgetList.removeAt(oldIndex);
-                WidgetList.insert(newIndex, replaceWidget);
+          for(final x in WidgetListfromStrings)
+            CheckboxListTile(
+              key: Key(x.value),
+              value: x.checkState ?? false,
+              title: Text(x.value),
+              onChanged: (val){
+                setState(() {
+                  if(!val){
+                    x.checkState = false;
+                  }
+                  else{
+                    x.checkState = true;
+                  }
                 });
-                },
-            ),
-          )
-          ],
-        )
-      );
-    }
+              },
+            )
+        ],
+        onReorder: _onreoder,
+      )
+    );
+  }
 }
