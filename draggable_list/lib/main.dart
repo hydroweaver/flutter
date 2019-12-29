@@ -7,7 +7,7 @@ void main(){
   ));
 }
 
-List<String> items = ["Sree", "Lavu", "Karan", "Kunal"];
+
 
 class _WidgetList{
   final String value;
@@ -15,16 +15,12 @@ class _WidgetList{
   _WidgetList(this.value, this.checkState);
 }
 
-List<_WidgetList> WidgetListfromStrings = items.map<_WidgetList>((String value){
-  return _WidgetList(value, false);
-}).toList();
-
-List<Widget> s = WidgetListfromStrings.map<Widget>(( _WidgetList value){
+/*List<Widget> s = WidgetListfromStrings.map<Widget>(( _WidgetList value){
   return ListTile(
     key: Key("${value.value}"),
     title: Text(value.value),
   );
-}).toList();
+}).toList();*/
 
 class App extends StatefulWidget{
   @override
@@ -33,8 +29,52 @@ class App extends StatefulWidget{
   }
 }
 
+class _strikethrough extends StatelessWidget{
+  final bool checked;
+  final String text;
+  _strikethrough(this.checked, this.text);
+
+  Widget _widget(){
+    if(checked){
+      return Text(
+        text,
+        style: TextStyle(
+          decoration: TextDecoration.lineThrough,
+          fontStyle: FontStyle.italic
+        ),
+      );
+    }
+    else{
+      return Text(
+        text,
+        style: TextStyle(
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return _widget();
+  }
+
+}
+
+
+
 class AppState extends State<App>{
 
+  List<String> items = [];
+   
+  List<_WidgetList> WidgetListfromStrings = [];
+  
+ _updateWidgetList(){
+     WidgetListfromStrings = items.map<_WidgetList>((String value){
+  return _WidgetList(value, false);
+}).toList();
+ }
+
+  var textFieldController =  TextEditingController();
 
   void _onreoder(oldIndex, newIndex){
     setState(() {
@@ -46,6 +86,11 @@ class AppState extends State<App>{
     });
   }
 
+  @override
+  void dispose(){
+    textFieldController.dispose();
+    super.dispose();
+  }
 
 
   @override
@@ -54,13 +99,34 @@ class AppState extends State<App>{
       appBar: AppBar(
         title: Text("Re Orderable List"),
       ),
-      body: ReorderableListView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          TextField(
+            controller: textFieldController,
+          ),
+          RaisedButton(
+            child: Text("Add Todo"),
+            onPressed: (){
+              setState(() {
+                items.add(textFieldController.text);
+                //_makeWidgetList();
+                _updateWidgetList();
+              textFieldController.clear();
+              print(items);
+              print(WidgetListfromStrings);
+              });
+            },
+          ),
+          Expanded(
+            child: ReorderableListView(
         children: <Widget>[
           for(final x in WidgetListfromStrings)
             CheckboxListTile(
               key: Key(x.value),
               value: x.checkState ?? false,
-              title: Text(x.value),
+              title: _strikethrough(x.checkState, x.value),
               onChanged: (val){
                 setState(() {
                   if(!val){
@@ -74,6 +140,9 @@ class AppState extends State<App>{
             )
         ],
         onReorder: _onreoder,
+      ),
+          )
+        ],
       )
     );
   }
