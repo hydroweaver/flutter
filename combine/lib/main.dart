@@ -76,7 +76,11 @@ class AppState extends State<App>{
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
-        title: Text("Flutter Todo List")
+        title: Text("Flutter Todo List"),
+        //backgroundColor: Colors.orange[500],
+        iconTheme: IconThemeData(
+          color: Colors.white
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,8 +88,12 @@ class AppState extends State<App>{
         children: <Widget>[
           Container(
             child: TextField(
+              decoration: InputDecoration(
+                hintText: "Enter Todo Text Here"
+              ),
               style: TextStyle(
                 fontSize: 22.0,
+                //color: Theme.of(context).accentColor,
               ),
               controller: textController,
               cursorWidth: 5.0,
@@ -132,7 +140,7 @@ class AppState extends State<App>{
                     background: Container(
                       child: Icon(Icons.delete),
                       alignment: Alignment.centerRight,
-                      color: Colors.red[300],
+                      color: Colors.orange[300],
                       ),
                     confirmDismiss: (dismissDirection){
                       return showDialog(//On Dismissing
