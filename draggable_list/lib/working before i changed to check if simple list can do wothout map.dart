@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 
 void main(){
   runApp(MaterialApp(
@@ -64,15 +64,15 @@ class _strikethrough extends StatelessWidget{
 
 class AppState extends State<App>{
 
-  //List<String> items = [];
+  List<String> items = [];
    
   List<_WidgetList> WidgetListfromStrings = [];
   
- /*_updateWidgetList(){
+ _updateWidgetList(){
      WidgetListfromStrings = items.map<_WidgetList>((String value){
   return _WidgetList(value, false);
 }).toList();
- }*/
+ }
 
   var textFieldController =  TextEditingController();
 
@@ -110,13 +110,11 @@ class AppState extends State<App>{
             child: Text("Add Todo"),
             onPressed: (){
               setState(() {
-                //items.add(textFieldController.text);
+                items.add(textFieldController.text);
                 //_makeWidgetList();
-                //_updateWidgetList();
-                WidgetListfromStrings.add(new _WidgetList(textFieldController.text, false));
-              print(WidgetListfromStrings);
+                _updateWidgetList();
               textFieldController.clear();
-              //print(items);
+              print(items);
               print(WidgetListfromStrings);
               });
             },
@@ -126,7 +124,7 @@ class AppState extends State<App>{
         children: <Widget>[
           for(final x in WidgetListfromStrings)
             CheckboxListTile(
-              key: ValueKey(x.value),/////hERE IS THE PROBLEM !!!!!!
+              key: Key(x.value),
               value: x.checkState ?? false,
               title: _strikethrough(x.checkState, x.value),
               onChanged: (val){
@@ -148,4 +146,4 @@ class AppState extends State<App>{
       )
     );
   }
-}
+}*/
