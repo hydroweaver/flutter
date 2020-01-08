@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 /*void main(){
   runApp(MaterialApp(
@@ -65,6 +67,31 @@ class AppState extends State<App>{
 
   List<ListItem> WidgetList = [];
 
+  /*void _saveData() async{
+    //print("Data would be synched at this point");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt("widget length", WidgetList.length);
+    print(prefs.getInt("widget length"));
+  }*/ //Initial Implementation where only the list length is saved.
+
+
+  void _saveData() async{
+    //print("Data would be synched at this point");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("last widget", WidgetList[WidgetList.length - 1].todoText);
+    print(prefs.getString("last widget"));
+  } //Initial Implementation where only the list length is saved.
+
+  //Implementation of writing whole list every time to memory instead of changing prefs - expensive but lets keep it simple
+
+  /*void _saveData() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    
+    //Create a string list from Widget List
+    
+
+  }*/
+
   @override
   void dispose(){
     textController.dispose();
@@ -107,6 +134,7 @@ class AppState extends State<App>{
             onPressed: (){
               if(textController.text.isNotEmpty){
                 WidgetList.add(new ListItem(textController.text, false));
+                _saveData();//SAVE DATA
                 setState(() {
                   textController.clear();
                 });
@@ -130,9 +158,11 @@ class AppState extends State<App>{
                         setState(() {
                           if(!checkValue){
                             widget.todoCheck = false;
+                            _saveData();//SAVE DATA
                           }
                           else{
                             widget.todoCheck = true;
+                            _saveData();//SAVE DATA
                           }
                         });
                       },
@@ -171,6 +201,7 @@ class AppState extends State<App>{
                     movementDuration: const Duration(milliseconds: 200),
                     onDismissed: (dismissDirection){//Delete Todo
                         WidgetList.remove(widget);
+                        _saveData();//SAVE DATA
                       Fluttertoast.showToast(
                         msg: "Todo Deleted!"
                       );
@@ -194,6 +225,7 @@ class AppState extends State<App>{
                         onPressed: (){
                           setState(() {
                             widget.todoText = popUpTextController.text;
+                            _saveData();//SAVE DATA
                           });
                           Navigator.of(context).pop(true);
                         },
@@ -218,6 +250,7 @@ class AppState extends State<App>{
             }
           var replaceWiget = WidgetList.removeAt(oldIndex);
           WidgetList.insert(newIndex, replaceWiget);
+          _saveData();//SAVE DATA
           });
       },
     ),
