@@ -3,19 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
 
+import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 
 List<CameraDescription> cameras;
 
-
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-
   cameras = await availableCameras();
-
   //I/flutter (22836): [CameraDescription(0, CameraLensDirection.back, 90), CameraDescription(1, CameraLensDirection.front, 270)]
   //print(cameras);
-
   runApp(
     MaterialApp(
       home: MyApp(),
@@ -33,11 +30,16 @@ class MyApp extends StatefulWidget{
 class MyAppState extends State<MyApp>{
 
   CameraController _cameraController;
+  Map<PermissionGroup, PermissionStatus> permissions;
 
+  void getPermission() async {
+    permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+  }
 
   @override
   void initState(){
-    io.Directory("/storage/emulateds").exists()..then((onvalue){
+    getPermission();
+    io.Directory("/storage/emulated/").exists()..then((onvalue){
       print(onvalue);
     });
     super.initState();
@@ -82,14 +84,14 @@ class MyAppState extends State<MyApp>{
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final image_name = "${DateTime.now()}.jpg";
-            final path = join((await getTemporaryDirectory()).path, "$image_name");
+            final imageName = "${DateTime.now()}.jpg";
+            final path = join((await getTemporaryDirectory()).path, "$imageName");
               await _cameraController.takePicture(path).then((_){
                 print("Picture is at $path");
-                print(image_name);
+                print(imageName);
               });
-            final phone_path = "/storage/emulated/0/Download/$image_name";
-            await io.File(path).copy(phone_path).then((_){
+            final phonePath = "/storage/emulated/0/Download/$imageName";
+            await io.File(path).copy(phonePath).then((_){
               print("File has been saved");
             });
           },
