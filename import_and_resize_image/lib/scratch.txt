@@ -1,0 +1,12 @@
+crap code:
+
+              var file = await DefaultCacheManager().getFilePath();
+              print(file);
+              var x = Image.file(io.File(source_path));
+              var y = ResizeImage(x.image, height: 28,  width: 28);
+              print(x.runtimeType);
+              print(y.runtimeType);
+              print(await getTemporaryDirectory());
+              var dir = '/data/user/0/com.example.import_and_resize_image/cache/libCachedImageData/';
+              var z = io.Directory(dir).listSync();
+              print(z);
