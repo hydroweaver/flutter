@@ -86,7 +86,6 @@ class MyAppState extends State<MyApp>{
 
             //convert ImageContents Byte Data to Unit 8 Byte data list stream whatever, so it can be written to image.jpg
             var convertedImageContents = imageContents.buffer.asUint8List();
-            print(convertedImageContents);
 
             //Write this buffer to image.jpg
             await imageFile.writeAsBytes(convertedImageContents);
@@ -129,7 +128,7 @@ class MyAppState extends State<MyApp>{
             //convert compressedPlaceholder to bytedata which can be converted to byte List
             //NOT USING VARIABLE IN MEMORY OR CACHE, SIMPLE CASE OF PICKING FROM DOWNLOADS FOLDER AND SAVING RESIZED IN SAME FOLDER SUING IMAGE LIBRARY
             //THIS IS HOW THE CAMERA SYSTEM WILL WORK, THOUGH NOT SURE HOW WILL IT WORK ON STREAMING IMAGE DATA.
-            var phonePath = 'storage/emulated/0/Download/image.jpg';
+            /*var phonePath = 'storage/emulated/0/Download/image.jpg';
     
             var fileToBeResized = await io.File(phonePath).readAsBytes();
             ImageProcess.Image i = ImageProcess.decodeImage(fileToBeResized);
@@ -137,16 +136,73 @@ class MyAppState extends State<MyApp>{
 
             await io.File('storage/emulated/0/Download/image_resized.jpg').writeAsBytes(ImageProcess.encodeJpg(resized_i)).then((_){
               print("File resized and sent to destination");
-            });
+            });*/
           
 
             //create a file for saving this resized image.
             //var resizedImageFilePath = join((await getTemporaryDirectory()).path, 'resizedImage.jpg');
             //var resizedImageFile = io.File(resizedImageFilePath);
-                 
-            setState(() {
+            
+            
+            //CASE 4 : using the solution recommended to my question in SO : https://stackoverflow.com/questions/59718179/how-to-get-bytedata-from-image-without-referencing-a-file/59722843#59722843
+            //Uint8List x;
+            var resizedImage = ResizeImage(img.image, height: 28, width: 28);
+            /*resizedImage.imageProvider.resolve(createLocalImageConfiguration(context))
+            .addListener(ImageStreamListener((info, _)async {
+              await info.image.toByteData().then((val){
+                var imageUint8Data  = val.buffer.asUint8List();
+
+                compressedPlaceholder = Image.memory(imageUint8Data);
+
+                //read resized from variable and show on screen.
+              });
+            }));*/
+            ByteData x;
+            Image kimg;
+            
+            resizedImage.imageProvider.resolve(createLocalImageConfiguration(context, size: Size(28, 28)))
+            .addListener(ImageStreamListener((info, _) async {
+
+
+                x = await info.image.toByteData();
+
+                print(x.lengthInBytes);
+
+                var imageUint8Data  = x.buffer.asUint8List();
+
+                //var imageByteDataPath = join((await getTemporaryDirectory()).path, 'resizedimage.jpg');
+
+                var imageByteDataPath = '/storage/emulated/0/Download/resizedimage.jpg';
+
+                await io.File(imageByteDataPath).writeAsBytes(imageUint8Data);
+
+                var something =  await io.File(imageByteDataPath).readAsBytes();
+
+                kimg = Image.memory(something);
+
+
+                //compressedPlaceholder = Image.memory(await io.File(imageByteDataPath).readAsBytes());
               
-            });            
+            }));
+          
+                setState(() {
+                  
+                });
+
+
+            //Write imageByteData to memory
+            /*var imageByteDataPath = join((await getTemporaryDirectory()).path, 'resizedimage.jpg');
+
+            await io.File(imageByteDataPath).writeAsBytes(imageByteData);
+
+            //read from the previous image file and display on screen
+            var readresizedImage = await io.File(imageByteDataPath).readAsBytes(); // No need for this, we can use image.memory
+
+            
+*/
+            /*setState(() {
+              
+            });       */
 
             }
           ),
