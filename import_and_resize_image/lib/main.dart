@@ -164,7 +164,7 @@ class MyAppState extends State<MyApp>{
             .addListener(ImageStreamListener((info, _) async {
 
 
-                x = await info.image.toByteData();
+                x = await info.image.toByteData(format: ui.ImageByteFormat.png);
 
                 print(x.lengthInBytes);
 
