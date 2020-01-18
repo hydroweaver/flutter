@@ -164,7 +164,7 @@ class MyAppState extends State<MyApp>{
             .addListener(ImageStreamListener((info, _) async {
 
 
-                x = await info.image.toByteData(format: ui.ImageByteFormat.png);
+                x = await info.image.toByteData(format: ui.ImageByteFormat.rawRgba);
 
                 print(x.lengthInBytes);
 
@@ -172,7 +172,9 @@ class MyAppState extends State<MyApp>{
 
                 //var imageByteDataPath = join((await getTemporaryDirectory()).path, 'resizedimage.jpg');
 
-                var imageByteDataPath = '/storage/emulated/0/Download/resizedimage.jpg';
+                //var imageByteDataPath = '/storage/emulated/0/Download/resizedimage.jpg';
+                //USING PNG
+                var imageByteDataPath = '/storage/emulated/0/Download/resizedimage.png';
 
                 await io.File(imageByteDataPath).writeAsBytes(imageUint8Data);
 
