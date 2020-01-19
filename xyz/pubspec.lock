@@ -29,13 +29,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
-  camera:
-    dependency: "direct main"
-    description:
-      name: camera
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.7+2"
   charcode:
     dependency: transitive
     description:
@@ -82,7 +75,7 @@ packages:
     source: sdk
     version: "0.0.0"
   image:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: image
       url: "https://pub.dartlang.org"
@@ -103,19 +96,12 @@ packages:
     source: hosted
     version: "1.1.8"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
-  path_provider:
-    dependency: "direct main"
-    description:
-      name: path_provider
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.5.1"
   pedantic:
     dependency: transitive
     description:
@@ -123,13 +109,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0+1"
-  permission_handler:
-    dependency: "direct main"
-    description:
-      name: permission_handler
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.1.0"
   petitparser:
     dependency: transitive
     description:
@@ -137,13 +116,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.4.0"
-  platform:
-    dependency: transitive
-    description:
-      name: platform
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.2.1"
   quiver:
     dependency: transitive
     description:
@@ -198,13 +170,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.11"
-  tflite:
-    dependency: "direct main"
-    description:
-      name: tflite
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4"
   typed_data:
     dependency: transitive
     description:
@@ -228,4 +193,3 @@ packages:
     version: "3.5.0"
 sdks:
   dart: ">=2.4.0 <3.0.0"
-  flutter: ">=1.10.0 <2.0.0"

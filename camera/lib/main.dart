@@ -6,8 +6,10 @@ import 'dart:io' as io;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image/image.dart' as ImageProcess;
+import 'package:tflite/tflite.dart' as tf;
 
 List<CameraDescription> cameras;
+String tflitemodel;
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,25 +42,18 @@ class MyAppState extends State<MyApp>{
     permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
   }
 
+  void load_model() async {
+    tflitemodel = await tf.Tflite.loadModel(model : 'model/mnist.tflite');
+    var result = await tf.Tflite.runModelOnImage(path: 'storage/emulated/0/Download/d.jpg');
+    print(result);
+  }
+
   @override
   void initState(){
     getPermission();
-    io.Directory("/storage/emulated/").exists()..then((onvalue){
-      print(onvalue);
-    });
+    load_model();
     super.initState();
-    _cameraController = CameraController(cameras[1], ResolutionPreset.medium);
-    _cameraController.initialize()..then((_){
-      if(!mounted){
-        return;
-      }
-      setState(() {});
-    });
-  }
-
-  //@override
-  void changeCam(CameraDescription cameraDescription){
-    _cameraController = CameraController(cameraDescription, ResolutionPreset.medium);
+    _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
     _cameraController.initialize()..then((_){
       if(!mounted){
         return;
