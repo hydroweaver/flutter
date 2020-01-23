@@ -1,7 +1,12 @@
+import 'dart:ffi';
+import 'dart:typed_data' show Float32List, Uint8List;
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'dart:io' as io;
+import 'dart:ui' as ui;
 
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
@@ -32,20 +37,56 @@ class MyApp extends StatefulWidget{
 
 class MyAppState extends State<MyApp>{
 
+
   var placeHolderImage = Image.asset('images/placeholder.jpg');
+  //var placeHolderImage = ImageProcess.decodeImage(io.File('storage/emulated/0/Download/predict.jpg').readAsBytesSync());
   int recognizedImage = 0;
 
   CameraController _cameraController;
   Map<PermissionGroup, PermissionStatus> permissions;
 
   void getPermission() async {
-    permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+    permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage, PermissionGroup.camera]);
   }
 
-  void load_model() async {
-    tflitemodel = await tf.Tflite.loadModel(model : 'model/mnist.tflite');
-    var result = await tf.Tflite.runModelOnImage(path: 'storage/emulated/0/Download/d.jpg');
-    print(result);
+  Future load_model() async {
+    await tf.Tflite.loadModel(model : 'model/karan_mnist.tflite', labels: 'model/labels.txt');
+    var predict_image_ByteData = io.File('/storage/emulated/0/Download/try.jpg').readAsBytesSync().buffer.asByteData();
+    
+
+    
+    var resultBytes = Float32List(28*28);
+    var buffer = Float32List.view(resultBytes.buffer);
+    var resultBytes_byte = 0;
+    for(var i = 0; i < buffer.lengthInBytes; i += 4){
+        //get first 3 pixel values and combine them to get value for buffer, so (28, 28, 3) [RGB] to (28, 28), RGB combined
+      var r_channel_value = predict_image_ByteData.getUint8(i);
+      var g_channel_value = predict_image_ByteData.getUint8(i+1);
+      var b_channel_value = predict_image_ByteData.getUint8(i+2);
+      buffer[resultBytes_byte] = ((r_channel_value + g_channel_value + b_channel_value) / 3.0 / 255.0); //https://github.com/xinthink/flttf/blob/master/lib/recognizer.dart
+      resultBytes_byte += 1;
+    }
+
+    print(resultBytes);
+    print(resultBytes.buffer.asUint8List().length);
+    var result = resultBytes.buffer.asUint8List();
+    Future _predict(Uint8List bytes) => tf.Tflite.runModelOnBinary(binary: bytes).catchError((e, s) => debugPrint("prediction failure: $e $s"));
+    var x = await _predict(result);
+
+    print(x);
+
+    /*Future _predict(Uint8List bytes) => tf.Tflite.runModelOnBinary(
+    binary: resultBytes.buffer.asUint8List(),
+  ).catchError((e, s) => debugPrint("prediction failure: $e $s"));
+
+  _predict(buffer);*/
+    //var result = await tf.Tflite.runModelOnImage(path: '/storage/emulated/0/Download/predict.jpg');
+
+    //print(result);
+    /*await io.File('/storage/emulated/0/Download/kiran.png').writeAsBytes(bytedata.toList()).then((onValue)async{
+      print(await onValue.exists());
+    });*/
+
   }
 
   @override
@@ -133,6 +174,7 @@ class MyAppState extends State<MyApp>{
 
             setState(() {
               placeHolderImage = Image.memory(pickResizedImageBytes);
+              //placeHolderImage = ImageProcess.decodeImage(pickResizedImageBytes);
             });
             
 
