@@ -1,0 +1,18 @@
+display unit8 list image
+do ops on image
+
+
+
+try getbytes implementation, lumiscence or new method on IMage lib images
+
+I think this is what is used in multiple cases since there is no direct getbytes method
+
+
+put MNIST code in new app, its copied so its not comng in device
+
+put stuff in initstate
+
+Reached here: let's try and display image later:
+
+var x = await rootBundle.load(path);
+    print(x.buffer);
