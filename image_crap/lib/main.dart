@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart' as pt;
 import 'dart:io' as io;
@@ -20,10 +22,15 @@ class MyAppState extends State<MyApp>{
   
   //var predict_image_ByteData = io.File('/storage/emulated/0/Download/try.jpg').readAsBytesSync().buffer.asByteData();
   var im = rootBundle.load('images/predict1.jpg');
+  Uint8List img_uint8;
 
-  Future<ByteData> imgLoad(String path) async{
+imgLoad(String path) async{
     var x = await rootBundle.load(path);
-    print(x.buffer);
+    img_uint8 = x.buffer.asUint8List();
+    var im2 = x.buffer.asByteData();
+    for(var i =0; i < im2.lengthInBytes; i++){
+      print(im2.getFloat32(i));
+    }
   }
 
   void initState(){
@@ -37,8 +44,21 @@ class MyAppState extends State<MyApp>{
       appBar: AppBar(
         title: Text("Image"),
       ),
-      body: Image(
-        image: Image.asset('images/predict1.jpg').image,
+      body: Row(
+        children: <Widget>[
+          Image(
+            image: Image.asset('images/predict1.jpg').image,
+            height: 200,
+            width: 200,
+            fit: BoxFit.contain,
+          ),
+          Image(
+            image: Image.memory(img_uint8).image,
+            height: 200,
+            width: 200,
+            fit: BoxFit.contain,
+          )
+        ],
       )
     );
   }
