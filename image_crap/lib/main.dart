@@ -22,15 +22,31 @@ class MyAppState extends State<MyApp>{
   
   //var predict_image_ByteData = io.File('/storage/emulated/0/Download/try.jpg').readAsBytesSync().buffer.asByteData();
   var im = rootBundle.load('images/predict1.jpg');
-  Uint8List img_uint8;
+  Uint8List img;
 
-imgLoad(String path) async{
+Future imgLoad(String path) async{
     var x = await rootBundle.load(path);
-    img_uint8 = x.buffer.asUint8List();
-    var im2 = x.buffer.asByteData();
-    for(var i =0; i < im2.lengthInBytes; i++){
-      print(im2.getFloat32(i));
+
+    // x.buffer.asFloat32List is same as Float32List.view(x.buffer)
+
+    //Let's create an empty buffer to draw on from X flloat 32 list
+
+    var empty_float = Float32List(x.buffer.asFloat32List().length);
+    var x_flat = Uint8List.view(x.buffer);
+
+    //so x_flat is a float32 buffer of X having values from x, which will now be converted and put into empty_float and then
+    //empty_float will be used to display an image, lets see how....
+
+    //MAP MODIFIED VALUES FORM x_flat to empty_float
+
+    var counter = 0;
+    for(var i =0; i < empty_float.length; i++){
+      empty_float[i] = (x_flat[counter] + x_flat[counter+1] + x_flat[counter+2]) / 3.0;
+      counter += 4;
     }
+
+    img = empty_float.buffer.asUint8List();
+    
   }
 
   void initState(){
@@ -53,7 +69,7 @@ imgLoad(String path) async{
             fit: BoxFit.contain,
           ),
           Image(
-            image: Image.memory(img_uint8).image,
+            image: Image.memory(img).image,
             height: 200,
             width: 200,
             fit: BoxFit.contain,
