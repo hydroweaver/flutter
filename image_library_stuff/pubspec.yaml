@@ -27,7 +27,7 @@ dependencies:
   path_provider:
   image:
   permission_handler:
-  tflite:
+  tflite: 
 
 dev_dependencies:
   flutter_test:

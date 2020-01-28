@@ -7,14 +7,8 @@ import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tflite/tflite.dart';
-import 'package:camera/camera.dart';
-
-List<CameraDescription> cameras;
 
 void main()async{
-  WidgetsFlutterBinding.ensureInitialized();
-  cameras = await availableCameras();
-  //I/flutter (22836): [CameraDescription(0, CameraLensDirection.back, 90), CameraDescription(1, CameraLensDirection.front, 270)]
   runApp(MaterialApp(
     home: MyApp(),
   ));
@@ -28,12 +22,28 @@ class MyApp extends StatefulWidget{
 class MyAppState extends State<MyApp>{
 
   var im = Image.asset('images/predict1.jpg');
-  CameraController _cameraController;
   Map<PermissionGroup, PermissionStatus> permissions;
 
-    void getPermission() async {
+  void getPermission() async {
     permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
   }
+
+Uint8List imageToByteListFloat32(Imageprocess.Image image, int inputSize, double mean, double std) {
+  var convertedBytes = Float32List(1 * inputSize * inputSize * 3);
+  var buffer = Float32List.view(convertedBytes.buffer);
+  int pixelIndex = 0;
+  for (var i = 0; i < inputSize; i++) {
+    for (var j = 0; j < inputSize; j++) {
+      var pixel = image.getPixel(j, i);
+      buffer[pixelIndex++] = (Imageprocess.getRed(pixel) - mean) / std;
+      buffer[pixelIndex++] = (Imageprocess.getGreen(pixel) - mean) / std;
+      buffer[pixelIndex++] = (Imageprocess.getBlue(pixel) - mean) / std;
+    }
+  }
+  return convertedBytes.buffer.asUint8List();
+}
+
+
 
   Future load_image_model_predict() async{
     
@@ -43,8 +53,8 @@ class MyAppState extends State<MyApp>{
     //print(x.height); //220
     //print(x.width); //440
 
-    var new_image = Uint8List(x.height*x.width);
-    var x_buffer = Uint8List.view(img.buffer);
+    //var new_image = Uint8List(x.height*x.width);
+    //var x_buffer = Uint8List.view(img.buffer);
  
     var g = Imageprocess.grayscale(x);
     var g3 = Imageprocess.brightness(g, 100);
@@ -53,7 +63,10 @@ class MyAppState extends State<MyApp>{
     var g5 = Imageprocess.normalize(g4, 0, 255);
     var g6 = Imageprocess.copyCrop(g5, 300, 90, 250, 250);
     var g7 = Imageprocess.copyResize(g6, height: 28, width: 28);
-    var prediction_val = g7.getBytes().buffer.asUint8List();
+
+
+    //var prediction_val = imageToByteListUint8(g7, 28);
+     //var prediction_val = g7.getBytes().buffer.asUint8List();
     //, dstX: 5, dstY: 3
 
     /*//create a copy of image
@@ -67,16 +80,12 @@ class MyAppState extends State<MyApp>{
       print(await onValue.exists());
     });
 
-    print(prediction_val);
-
-    var model_load = await Tflite.loadModel(model: 'model/mnist.tflite', labels: 'model/labels.txt');
+    var model_load = await Tflite.loadModel(model: 'model/karan_mnist.tflite', labels: 'model/labels.txt');
     print(model_load);
-
-    var r = await Tflite.runModelOnBinary(binary: prediction_val);
+    var r = await Tflite.runModelOnBinary(binary: g7.getBytes().buffer.asUint8List());
 
     print(r);
-    Tflite.close();
-
+    await Tflite.close();
 
   }
 
@@ -84,30 +93,21 @@ class MyAppState extends State<MyApp>{
   void initState() { 
     super.initState();
     getPermission();
-
-    _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
-    _cameraController.initialize()..then((_){
-      if(!mounted){
-        return;
-      }
-      setState(() {});
-    });
-
     load_image_model_predict();
   }
 
   @override
-  void dispose(){
-    _cameraController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context){
-    if(!_cameraController.value.isInitialized){
-      return Container(
-      );
-    }
-    return 
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Predict Image"),
+      ),
+      body: Image(
+        image: im.image,
+        height: 200,
+        width: 200,
+        fit: BoxFit.contain,
+      ),
+    );
   }
 }

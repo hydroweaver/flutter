@@ -14,5 +14,9 @@ put stuff in initstate
 
 Reached here: let's try and display image later:
 
-var x = await rootBundle.load(path);
-    print(x.buffer);
+
+I/flutter ( 3933): prediction: [4][{confidence: 0.2935374081134796, index: 5, label: 5}, {confidence: 0.14381198585033417, index: 7, label: 7}, {confidence: 0.11615131795406342, index: 4, label: 4}, {confidence: 0.1031794622540474, index: 1, label: 1}]
+
+I know which format the image should be, so it can be this raw format which cant be seen on view but work.
+
+I was able to retrieve the image from flttf project, save it disk and get it back again and predict on using image lib, which means....this is the format my image should be in, and its 1/4 of the jpg file...so the question is how to convert jpg to this fomrat

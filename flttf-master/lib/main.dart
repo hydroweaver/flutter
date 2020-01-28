@@ -1,9 +1,29 @@
 import 'package:flttf/recognizer_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget{
+  @override
+  MyAppState createState() => MyAppState();
+
+}
+
+class MyAppState extends State<MyApp> {
+
+  Map<PermissionGroup, PermissionStatus> permissions;
+
+  void getPermission() async {
+    permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage, PermissionGroup.camera]);
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    getPermission();
+  }
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {

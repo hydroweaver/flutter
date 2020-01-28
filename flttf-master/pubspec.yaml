@@ -27,6 +27,8 @@ dependencies:
   intl: ^0.16.0
   tflite: ^1.0.4
   collection_ext: ^0.0.2
+  permission_handler:
+  image:
 
 dev_dependencies:
   pedantic: ^1.8.0
@@ -54,7 +56,7 @@ flutter:
     - models/mnist/labels.txt
     - models/mnist/colab_mnist.tflite
     - models/mnist/karan_mnist.tflite
-    - images/predict.jpg
+    - images/predict1.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

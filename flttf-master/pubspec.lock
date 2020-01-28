@@ -82,7 +82,7 @@ packages:
     source: sdk
     version: "0.0.0"
   image:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: image
       url: "https://pub.dartlang.org"
@@ -123,6 +123,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0+1"
+  permission_handler:
+    dependency: "direct main"
+    description:
+      name: permission_handler
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.0+hotfix.2"
   petitparser:
     dependency: transitive
     description:
