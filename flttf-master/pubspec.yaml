@@ -52,9 +52,7 @@ flutter:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
   assets:
-    - models/mnist/mnist.tflite
     - models/mnist/labels.txt
-    - models/mnist/colab_mnist.tflite
     - models/mnist/karan_mnist.tflite
     - images/predict1.jpg
 

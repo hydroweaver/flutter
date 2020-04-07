@@ -40,9 +40,10 @@ class Recognizer {
     
     final imgBytes = await img.toByteData(); //3136 bytes size
 
-    await io.File('/storage/emulated/0/Download/x.png').writeAsBytes(imgBytes.buffer.asUint8List().toList()).then((onValue)async{
+    await io.File('/storage/emulated/0/Download/x.jpg').writeAsBytes(imgBytes.buffer.asUint8List().toList()).then((onValue)async{
       print(await onValue.exists());
     });
+
     
     final resultBytes = Float32List(size * size);
     final buffer = Float32List.view(resultBytes.buffer);
@@ -58,11 +59,16 @@ class Recognizer {
   }
 
   Future _loadAssetImage() async{
-    final asset_image = await rootBundle.load('images/predict1.jpg');
-    final im2 = await Imageprocess.decodeImage(asset_image.buffer.asUint8List());
-    final im3 = await Imageprocess.copyResize(im2, height: 28, width: 28);
+    
+    //final asset_image = await rootBundle.load('images/predict1.jpg');
+    //final im2 = await Imageprocess.decodeImage(asset_image.buffer.asUint8List());
+    //final im3 = await Imageprocess.copyResize(im2, height: 28, width: 28);
 
-    var x = await io.File('/storage/emulated/0/Download/x.png').readAsBytes();
+    var x = await io.File('/storage/emulated/0/Download/x.jpg').readAsBytes();
+    var jpgim = await io.File('/storage/emulated/0/Download/img.jpg').readAsBytes();
+
+    print(x.buffer.lengthInBytes);
+    print(jpgim.buffer.lengthInBytes);
 
     final resultBytes1 = Float32List(28 * 28);
     final buffer = Float32List.view(resultBytes1.buffer);
@@ -75,7 +81,7 @@ class Recognizer {
     }
     
     var x1 = await _predict(resultBytes1.buffer.asUint8List());
-  print("Confidence of retrieved image is : $x1");
+    print("Confidence of retrieved image is : $x1");
     
 
   }

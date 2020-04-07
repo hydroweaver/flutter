@@ -43,18 +43,10 @@ Uint8List imageToByteListFloat32(Imageprocess.Image image, int inputSize, double
   return convertedBytes.buffer.asUint8List();
 }
 
-
-
   Future load_image_model_predict() async{
     
   var img = await rootBundle.load('images/predict1.jpg');
    var x = Imageprocess.decodeJpg(img.buffer.asUint8List());
-
-    //print(x.height); //220
-    //print(x.width); //440
-
-    //var new_image = Uint8List(x.height*x.width);
-    //var x_buffer = Uint8List.view(img.buffer);
  
     var g = Imageprocess.grayscale(x);
     var g3 = Imageprocess.brightness(g, 100);
@@ -64,28 +56,32 @@ Uint8List imageToByteListFloat32(Imageprocess.Image image, int inputSize, double
     var g6 = Imageprocess.copyCrop(g5, 300, 90, 250, 250);
     var g7 = Imageprocess.copyResize(g6, height: 28, width: 28);
 
+    var convertedBytes = Float32List(28*28);
+    print(convertedBytes.length);
+    print(convertedBytes.lengthInBytes);
 
-    //var prediction_val = imageToByteListUint8(g7, 28);
-     //var prediction_val = g7.getBytes().buffer.asUint8List();
-    //, dstX: 5, dstY: 3
+    var buffer = Float32List.view(convertedBytes.buffer);
+    print(buffer.length);
+    print(buffer.lengthInBytes);
 
-    /*//create a copy of image
-    var blank_canvas = Imageprocess.normalize(g4, 255, 255);
-    blank_canvas = Imageprocess.copyResize(blank_canvas, height: 28, width: 28);
+    int pixIndex = 0;
+    for(var i = 0; i < 28; i++){
+      for(var j = 0;j< 28;j++){
+        var pixel = g7.getPixel(i, j);
+        //buffer[pixIndex++] = (Imageprocess.getRed(pixel) + Imageprocess.getGreen(pixel) + Imageprocess.getBlue(pixel)) / 3 / 255.0;
+        convertedBytes[pixIndex++] = (Imageprocess.getRed(pixel) + Imageprocess.getGreen(pixel) + Imageprocess.getBlue(pixel)) / 3 / 255.0;
+      }
+    }
 
-    //paste g7 onto blank canvas in the center
-    var resized = Imageprocess.copyInto(blank_canvas, g7, blend: false, );*/
+    var inferbytes = convertedBytes.buffer.asUint8List();
 
-    await io.File('/storage/emulated/0/Download/img.jpg').writeAsBytes(Imageprocess.encodeJpg(g7)).then((onValue) async{
-      print(await onValue.exists());
+    await Tflite.loadModel(model: 'model/karan_mnist.tflite', labels: 'model/labels.txt').then((onValue){
+      print(onValue);
     });
+    List result = await Tflite.runModelOnBinary(binary: inferbytes);
 
-    var model_load = await Tflite.loadModel(model: 'model/karan_mnist.tflite', labels: 'model/labels.txt');
-    print(model_load);
-    var r = await Tflite.runModelOnBinary(binary: g7.getBytes().buffer.asUint8List());
-
-    print(r);
-    await Tflite.close();
+    print(result);
+    Tflite.close();
 
   }
 
@@ -102,12 +98,17 @@ Uint8List imageToByteListFloat32(Imageprocess.Image image, int inputSize, double
       appBar: AppBar(
         title: Text("Predict Image"),
       ),
-      body: Image(
-        image: im.image,
-        height: 200,
-        width: 200,
-        fit: BoxFit.contain,
-      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Image(
+            image: im.image,
+            fit: BoxFit.contain,
+            height: 200,
+            width: 200,
+          ),
+        ],
+      )
     );
   }
 }
