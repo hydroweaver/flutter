@@ -8,75 +8,32 @@ import 'package:flutter/services.dart';
 import 'package:image/image.dart';
 import 'package:tflite/tflite.dart';
 
-final int imgSize = 28;
 
-class MnistClassifier {
+Future classifyImage(String imgFile) async {
 
-  // Model files
-  static final String modelFilename = "assets/model/karan_mnist.tflite";
-  static final String modelLabels = "assets/model/labels.txt";
+  await Tflite.loadModel(model: 'assets/model/mnist.tflite', labels: 'assets/model/labels.txt');
 
-  // Model inputs
-  static final int imgWidth = 28;
-  static final int imgHeight = 28;
-  static final int floatSize = 4;
-  static final int pixelSize = 4;
-  static final int modelInputSize = floatSize * imgWidth * imgHeight * pixelSize;
+  var imageBytes = io.File(imgFile).readAsBytesSync().buffer;
 
-  // Model outputs
-  static final int numClassificationResults = 3;
-}
+  Image oriImage = decodeJpg(imageBytes.asUint8List());
+  Image resizedImage = copyResize(oriImage, height: 28, width: 28);
 
-class MnistClassifierResult {
-  String fileName;
-  String label;
-  int index;
-  double confidence;
-}
-
-Uint8List imageToByteListFloat32(Image image, int width, int height) {
-  var convertedBytes = Float32List(width * height);
+  var convertedBytes = Float32List(28 * 28);
   var buffer = Float32List.view(convertedBytes.buffer);
   int pixelIndex = 0;
-  for (var i = 0; i < width; i++) {
-    for (var j = 0; j < height; j++) {
-      var pixel = image.getPixel(j, i);
+  for (var i = 0; i < 28; i++) {
+    for (var j = 0; j < 28; j++) {
+      var pixel = resizedImage.getPixel(i, j);
       buffer[pixelIndex++] =
           (getRed(pixel) + getGreen(pixel) + getBlue(pixel)) / 3 / 255.0;
     }
   }
-  return convertedBytes.buffer.asUint8List();
-}
 
-Future<MnistClassifierResult> classifyImage(String imgFile) async {
+  var x = convertedBytes.buffer.asUint8List();
 
-  await Tflite.loadModel(
-    model: MnistClassifier.modelFilename,
-    labels: MnistClassifier.modelLabels,
-  );
+  List recognitions = await Tflite.runModelOnBinary(binary: x);
 
-  //var imageBytes = (await rootBundle.load(imgFile)).buffer;
-  var imageBytes = io.File(imgFile).readAsBytesSync().buffer;
+  print(recognitions);
 
-  print(imageBytes);
-  //print(ib);
-
-  Image oriImage = decodeJpg(imageBytes.asUint8List());
-  Image resizedImage = copyResize(oriImage, height: MnistClassifier.imgHeight, width: MnistClassifier.imgWidth);
-
-  List recognitions = await Tflite.runModelOnBinary(
-    binary: imageToByteListFloat32(resizedImage, MnistClassifier.imgWidth, MnistClassifier.imgHeight),
-  );
-
-  Tflite.close();
-
-  print(recognitions.toString());
-
-  var res = MnistClassifierResult();
-  res.fileName = imgFile;
-  res.label = recognitions[0]['label'];
-  res.index = recognitions[0]['index'];
-  res.confidence = recognitions[0]['confidence'];
-
-  return res;
+  Tflite.close(); 
 }

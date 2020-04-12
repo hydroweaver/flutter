@@ -1,8 +1,9 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as pathy;
 
 List<CameraDescription> cameras;
 
@@ -64,15 +65,6 @@ class _CameraAppState extends State<CameraApp> {
         ));
   }
 
-  /// Display the preview from the camera (or a message if the preview is not available).
-  Widget _cameraPreviewWidget() {
-    if (!controller.value.isInitialized) {
-      return Container();
-    }
-    return AspectRatio(
-        aspectRatio: controller.value.aspectRatio,
-        child: CameraPreview(controller));
-  }
 
   /// Display the control bar with buttons to take pictures and record videos.
   Widget _captureControlRowWidget() {
@@ -93,36 +85,6 @@ class _CameraAppState extends State<CameraApp> {
     );
   }
 
-  void onTakePictureButtonPressed() {
-    takePicture().then((String filePath) {
-      if (mounted && filePath != null) {
-        //showInSnackBar('Picture saved to $filePath');
-        Navigator.pop(context,filePath);
-      }
-    });
-  }
-
-  Future<String> takePicture() async {
-    
-    final Directory extDir = await getApplicationDocumentsDirectory();
-    final String dirPath = '${extDir.path}/Pictures/handwritten_digits';
-    var x = await getTemporaryDirectory();
-    await Directory(dirPath).create(recursive: true);
-    final String filePath = '$dirPath/${timestamp()}.jpg';
-
-    if (controller.value.isTakingPicture) {
-      // A capture is already pending, do nothing.
-      return null;
-    }
-
-    try {
-      await controller.takePicture(filePath);
-    } on CameraException catch (e) {
-      _showCameraException(e);
-      return null;
-    }
-    return filePath;
-  }
 
   void showInSnackBar(String message) {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
@@ -133,3 +95,7 @@ class _CameraAppState extends State<CameraApp> {
     showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 }
+
+
+
+*/

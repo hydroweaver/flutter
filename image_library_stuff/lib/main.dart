@@ -21,6 +21,8 @@ class MyApp extends StatefulWidget{
 
 class MyAppState extends State<MyApp>{
 
+  var placeholderImage = Image.asset('images/placeholder.jpg');
+
   var im = Image.asset('images/predict1.jpg');
   Map<PermissionGroup, PermissionStatus> permissions;
 
@@ -55,6 +57,10 @@ Uint8List imageToByteListFloat32(Imageprocess.Image image, int inputSize, double
     var g5 = Imageprocess.normalize(g4, 0, 255);
     var g6 = Imageprocess.copyCrop(g5, 300, 90, 250, 250);
     var g7 = Imageprocess.copyResize(g6, height: 28, width: 28);
+
+    setState(() {
+      placeholderImage = Image.memory(g7.getBytes());
+    });
 
     var convertedBytes = Float32List(28*28);
     print(convertedBytes.length);
@@ -107,6 +113,7 @@ Uint8List imageToByteListFloat32(Imageprocess.Image image, int inputSize, double
             height: 200,
             width: 200,
           ),
+          Image(image: placeholderImage.image)
         ],
       )
     );

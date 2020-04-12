@@ -48,6 +48,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
   - images/predict1.jpg
+  - images/placeholder.jpg
   - model/karan_mnist.tflite
   - model/labels.txt
   - model/mnist.tflite
